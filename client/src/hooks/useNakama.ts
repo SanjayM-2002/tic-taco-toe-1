@@ -24,6 +24,7 @@ export function useNakama() {
     nakamaClient
       .authenticate()
       .then((session) => {
+        console.log("[nakama] authenticated successfully, userId:", session.user_id, "username:", session.username);
         if (mounted) {
           setState({
             authenticated: true,
@@ -35,6 +36,7 @@ export function useNakama() {
         }
       })
       .catch((err) => {
+        console.error("[nakama] authentication failed:", err);
         if (mounted) {
           setState((prev) => ({
             ...prev,
