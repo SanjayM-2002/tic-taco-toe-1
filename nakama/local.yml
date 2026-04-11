@@ -1,0 +1,13 @@
+logger:
+  level: "DEBUG"
+
+runtime:
+  js_entrypoint: "build/index.js"
+
+# To use a cloud-hosted PostgreSQL, uncomment and fill in:
+# database:
+#   address: "your-cloud-db-host:5432"
+#   user: "nakama"
+#   password: "your-password"
+#   database: "nakama"
+#   ssl_mode: "require"

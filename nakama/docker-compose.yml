@@ -1,0 +1,20 @@
+services:
+  nakama:
+    container_name: nakama
+    image: registry.heroiclabs.com/heroiclabs/nakama:3.25.0
+    entrypoint:
+      - /bin/sh
+      - -ecx
+      - >
+        /nakama/nakama migrate up --database.address ${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE} &&
+        exec /nakama/nakama --config /nakama/data/local.yml --database.address ${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}
+    ports:
+      - "7349:7349"   # gRPC API (admin console uses this)
+      - "7350:7350"   # HTTP/WebSocket API (clients connect here)
+      - "7351:7351"   # Admin console
+    volumes:
+      - ./local.yml:/nakama/data/local.yml
+      - ./build:/nakama/data/modules/build
+    env_file:
+      - .env
+    restart: unless-stopped
