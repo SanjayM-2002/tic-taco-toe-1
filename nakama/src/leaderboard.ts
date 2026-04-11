@@ -11,20 +11,19 @@ export function setupLeaderboards(nk: nkruntime.Nakama, logger: nkruntime.Logger
   // Wins leaderboard — descending, best score wins
   nk.leaderboardCreate(
     LEADERBOARD_ID,
-    true, // authoritative — only server can write
+    true,
     nkruntime.SortOrder.DESCENDING,
-    nkruntime.Operator.INCREMENTAL, // each write adds to the score
-    undefined, // no reset schedule
-    undefined // no metadata
+    nkruntime.Operator.INCREMENTAL,
+    undefined,
+    undefined
   );
   logger.info("leaderboard '%s' ready", LEADERBOARD_ID);
 
-  // Win streak leaderboard — descending, best score wins
   nk.leaderboardCreate(
     LEADERBOARD_STREAK_ID,
     true,
     nkruntime.SortOrder.DESCENDING,
-    nkruntime.Operator.BEST, // only keeps the best (highest) streak
+    nkruntime.Operator.BEST,
     undefined,
     undefined
   );

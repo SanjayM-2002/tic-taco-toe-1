@@ -33,8 +33,6 @@ class NakamaClient {
   }
 
   async authenticate(): Promise<Session> {
-    // Use sessionStorage so each browser tab gets a unique player.
-    // This allows testing with two tabs in the same browser.
     let deviceId = sessionStorage.getItem("nakama_device_id");
     if (!deviceId) {
       deviceId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -132,5 +130,4 @@ class NakamaClient {
   }
 }
 
-// Singleton instance
 export const nakamaClient = new NakamaClient();

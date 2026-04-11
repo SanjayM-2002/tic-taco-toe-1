@@ -73,7 +73,7 @@ function calculateDeadline(state: MatchState): number {
   return 0;
 }
 
-// ─── 1. matchInit ─────────────────────────────────────────
+// matchInit
 
 export const matchInit: nkruntime.MatchInitFunction<MatchState> = function (
   ctx,
@@ -112,7 +112,7 @@ export const matchInit: nkruntime.MatchInitFunction<MatchState> = function (
   };
 };
 
-// ─── 2. matchJoinAttempt ──────────────────────────────────
+// matchJoinAttempt
 
 export const matchJoinAttempt: nkruntime.MatchJoinAttemptFunction<MatchState> = function (
   ctx,
@@ -141,7 +141,7 @@ export const matchJoinAttempt: nkruntime.MatchJoinAttemptFunction<MatchState> = 
   return { state, accept: true };
 };
 
-// ─── 3. matchJoin ─────────────────────────────────────────
+// matchJoin
 
 export const matchJoin: nkruntime.MatchJoinFunction<MatchState> = function (
   ctx,
@@ -194,7 +194,7 @@ export const matchJoin: nkruntime.MatchJoinFunction<MatchState> = function (
   return { state };
 };
 
-// ─── 4. matchLoop ─────────────────────────────────────────
+// matchLoop 
 
 export const matchLoop: nkruntime.MatchLoopFunction<MatchState> = function (
   ctx,
@@ -205,7 +205,7 @@ export const matchLoop: nkruntime.MatchLoopFunction<MatchState> = function (
   state,
   messages
 ) {
-  // --- Idle match cleanup ---
+  //  Idle match cleanup 
   const activePresences = getActivePresences(state);
   if (activePresences.length === 0) {
     state.emptyTicks++;
@@ -217,7 +217,7 @@ export const matchLoop: nkruntime.MatchLoopFunction<MatchState> = function (
   }
   state.emptyTicks = 0;
 
-  // --- Turn timer check (timed mode) ---
+  //  Turn timer check (timed mode) 
   if (
     !state.gameOver &&
     state.gameMode === GameMode.TIMED &&
@@ -248,7 +248,7 @@ export const matchLoop: nkruntime.MatchLoopFunction<MatchState> = function (
     }
   }
 
-  // --- Process incoming messages ---
+  // Process incoming messages
   if (state.gameOver) {
     return { state };
   }
@@ -305,7 +305,7 @@ export const matchLoop: nkruntime.MatchLoopFunction<MatchState> = function (
       continue;
     }
 
-    // --- Apply the move ---
+    //  Apply the move 
     const mark = state.marks[senderId];
     state.board[position] = mark;
 
@@ -364,7 +364,7 @@ export const matchLoop: nkruntime.MatchLoopFunction<MatchState> = function (
   return { state };
 };
 
-// ─── 5. matchLeave ────────────────────────────────────────
+//  matchLeave
 
 export const matchLeave: nkruntime.MatchLeaveFunction<MatchState> = function (
   ctx,
@@ -411,7 +411,7 @@ export const matchLeave: nkruntime.MatchLeaveFunction<MatchState> = function (
   return { state };
 };
 
-// ─── 6. matchSignal ───────────────────────────────────────
+//  matchSignal
 
 export const matchSignal: nkruntime.MatchSignalFunction<MatchState> = function (
   ctx,
@@ -426,7 +426,7 @@ export const matchSignal: nkruntime.MatchSignalFunction<MatchState> = function (
   return { state, data: "signal acknowledged" };
 };
 
-// ─── 7. matchTerminate ────────────────────────────────────
+//  matchTerminate
 
 export const matchTerminate: nkruntime.MatchTerminateFunction<MatchState> = function (
   ctx,

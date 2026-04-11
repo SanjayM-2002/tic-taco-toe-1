@@ -8,14 +8,14 @@ export const LEADERBOARD_STREAK_ID = "win_streak";
 export const PLAYER_STATS_COLLECTION = "player_stats";
 export const PLAYER_STATS_KEY = "stats";
 
-// Win conditions: indices that form a line
+// Win conditions
 export const WIN_LINES: number[][] = [
-  [0, 1, 2], // top row
-  [3, 4, 5], // middle row
-  [6, 7, 8], // bottom row
-  [0, 3, 6], // left column
-  [1, 4, 7], // middle column
-  [2, 5, 8], // right column
-  [0, 4, 8], // diagonal top-left to bottom-right
-  [2, 4, 6], // diagonal top-right to bottom-left
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
 ];

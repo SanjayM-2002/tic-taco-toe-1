@@ -49,6 +49,7 @@ const INITIAL_STATE: MatchState = {
 export function useMatch(userId: string | null) {
   const [state, setState] = useState<MatchState>(INITIAL_STATE);
   const matchIdRef = useRef<string | null>(null);
+  const findingRef = useRef(false);
 
   // Register socket event listeners
   useEffect(() => {
@@ -59,12 +60,8 @@ export function useMatch(userId: string | null) {
       let data = null;
       if (result.data) {
         try {
-          // nakama-js v2.8 sends data as Uint8Array — decode to JSON
-          const jsonStr =
-            result.data instanceof Uint8Array
-              ? new TextDecoder().decode(result.data)
-              : typeof result.data === "string"
-                ? result.data
+          const jsonStr = result.data instanceof Uint8Array ? new TextDecoder().decode(result.data)
+              : typeof result.data === "string" ? result.data
                 : JSON.stringify(result.data);
           data = JSON.parse(jsonStr);
         } catch (e) {
@@ -168,6 +165,11 @@ export function useMatch(userId: string | null) {
 
   const findMatch = useCallback(
     async (mode: "classic" | "timed" = "classic") => {
+      if (findingRef.current) {
+        console.log("[match] findMatch already in progress, skipping");
+        return;
+      }
+      findingRef.current = true;
       setState((prev) => ({ ...prev, status: "finding", error: null }));
       try {
         const matchId = await nakamaClient.findMatch(mode);
@@ -177,24 +179,19 @@ export function useMatch(userId: string | null) {
 
         console.log("[match] joined, presences:", match.presences);
 
-        // Don't override status if START handler already set it to "playing".
-        // joinMatch response only includes OTHER presences (not self),
-        // so we always set "waiting" here and let the START handler transition to "playing".
-        setState((prev) => ({
-          ...prev,
-          matchId,
-          status: prev.status === "playing" ? "playing" : "waiting",
-          board: Array(9).fill(null),
-          myMark: null,
-          opponentId: null,
-          currentTurn: null,
-          winner: null,
-          winLine: null,
-          doneReason: null,
-          gameMode: mode === "timed" ? GameMode.TIMED : GameMode.CLASSIC,
-          deadline: 0,
-          opponentPresent: prev.status === "playing",
-        }));
+
+        setState((prev) => {
+          if (prev.status === "playing") {
+            console.log("[match] START already received, preserving game state");
+            return { ...prev, matchId };
+          }
+          return {
+            ...prev,
+            matchId,
+            status: "waiting",
+            gameMode: mode === "timed" ? GameMode.TIMED : GameMode.CLASSIC,
+          };
+        });
       } catch (err: any) {
         console.error("[match] failed to find/join match:", err);
         setState((prev) => ({
@@ -202,6 +199,8 @@ export function useMatch(userId: string | null) {
           status: "idle",
           error: err.message || "Failed to find match",
         }));
+      } finally {
+        findingRef.current = false;
       }
     },
     []

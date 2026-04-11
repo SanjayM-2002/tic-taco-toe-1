@@ -1,4 +1,3 @@
-// Mirror of server-side OpCodes and types
 
 export const Mark = {
   X: 1,
